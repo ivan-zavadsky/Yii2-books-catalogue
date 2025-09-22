@@ -14,7 +14,7 @@ class SignupSearch
         ];
     }
 
-    public function search($params, $formName = null)
+    public function search($params, $formName = null): ArrayDataProvider
     {
         $query = new Query();
         $year = $params['Book']['issue_year'] ?? 0;
@@ -37,6 +37,9 @@ class SignupSearch
 
         $dataProvider = new ArrayDataProvider([
             'allModels' => $query->all(),
+            'pagination' => [
+                'pageSize' => 10,
+            ],
         ]);
 
         return $dataProvider;

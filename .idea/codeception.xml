@@ -6,6 +6,9 @@
         <Configuration>
           <option name="path" value="$PROJECT_DIR$/basic/tests" />
         </Configuration>
+        <Configuration>
+          <option name="path" value="$PROJECT_DIR$/books/tests" />
+        </Configuration>
       </list>
     </option>
   </component>

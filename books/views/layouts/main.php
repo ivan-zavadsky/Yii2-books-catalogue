@@ -45,14 +45,14 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
                 ? ''
                 : ['label' => 'Books', 'url' => ['/book/index']]
             ,
-            Yii::$app->user->isGuest
-                ? ''
-                : ['label' => 'Authors', 'url' => ['/author/index']]
-            ,
-            Yii::$app->user->isGuest
-                ? ''
-                : ['label' => 'Link', 'url' => ['/book-author/index']]
-            ,
+//            Yii::$app->user->isGuest
+//                ? ''
+//                : ['label' => 'Authors', 'url' => ['/author/index']]
+//            ,
+//            Yii::$app->user->isGuest
+//                ? ''
+//                : ['label' => 'Link', 'url' => ['/book-author/index']]
+//            ,
 //            ['label' => 'Report', 'url' => ['/report/index']],
             Yii::$app->user->isGuest
                 ? ['label' => 'Login', 'url' => ['/site/login']]
@@ -72,11 +72,13 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 
 <main id="main" class="flex-shrink-0" role="main">
     <div class="container">
-        <?php if (!empty($this->params['breadcrumbs'])): ?>
-            <?= Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]) ?>
-        <?php endif ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
+        <div style="width: 50%; min-width: 500px;">
+            <?php if (!empty($this->params['breadcrumbs'])): ?>
+                <?= Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]) ?>
+            <?php endif ?>
+            <?= Alert::widget() ?>
+            <?= $content ?>
+        </div>
     </div>
 </main>
 

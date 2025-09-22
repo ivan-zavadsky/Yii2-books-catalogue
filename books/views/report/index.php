@@ -28,7 +28,17 @@ $this->title = 'Report';
                 }
             ],
             'issue_year',
-            'description:ntext',
+            [
+                'label' => 'Description',
+                'value' => function($model) {
+                    $description = strlen((string) $model->description)
+                        ? substr($model->description, 0, 20) . '...'
+                        : '<span class="not-set">(not set)</span>';
+                    return $description;
+                },
+                'format' => 'raw',
+                'contentOptions' => ['style' => 'text-align: center;'],
+            ],
             'isbn',
             'photo_url:url',
         ],

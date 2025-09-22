@@ -4,21 +4,21 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Book;
+use app\models\Contact;
 
 /**
- * BookSearch represents the model behind the search form of `app\models\Book`.
+ * SearchContact represents the model behind the search form of `app\models\Contact`.
  */
-class ReportSearch extends Book
+class SearchContact extends Contact
 {
     /**
      * {@inheritdoc}
      */
-    public function rules(): array
+    public function rules()
     {
         return [
-            [['id', 'issue_year'], 'integer'],
-            [['name', 'description', 'isbn', 'photo_url'], 'safe'],
+            [['id'], 'integer'],
+            [['name', 'type', 'guest_token'], 'safe'],
         ];
     }
 
@@ -41,9 +41,7 @@ class ReportSearch extends Book
      */
     public function search($params, $formName = null)
     {
-        $query = Book::find()
-            ->orderBy(['id' => SORT_DESC])
-        ;
+        $query = Contact::find();
 
         // add conditions that should always apply here
 
@@ -54,21 +52,19 @@ class ReportSearch extends Book
         $this->load($params, $formName);
 
         if (!$this->validate()) {
-//             uncomment the following line if you do not want to return any records when validation fails
-             $query->where('0=1');
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
             return $dataProvider;
         }
 
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'issue_year' => $this->issue_year,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'description', $this->description])
-            ->andFilterWhere(['like', 'isbn', $this->isbn])
-            ->andFilterWhere(['like', 'photo_url', $this->photo_url]);
+            ->andFilterWhere(['like', 'type', $this->type])
+            ->andFilterWhere(['like', 'guest_token', $this->guest_token]);
 
         return $dataProvider;
     }

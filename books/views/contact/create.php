@@ -3,20 +3,20 @@
 use yii\helpers\Html;
 
 /** @var yii\web\View $this */
-/** @var app\models\Book $model */
-/** @var app\models\Author $author */
+/** @var app\models\Contact $model */
+/** @var string $token */
 
-$this->title = 'Create Book';
-$this->params['breadcrumbs'][] = ['label' => 'Books', 'url' => ['index']];
+$this->title = 'Create Contact';
+$this->params['breadcrumbs'][] = ['label' => 'Contacts', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="book-create">
+<div class="contact-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
         'model' => $model,
-        'author' => $author,
+        'token' => $token,
     ]) ?>
 
 </div>

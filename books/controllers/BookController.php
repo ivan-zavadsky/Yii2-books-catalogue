@@ -2,8 +2,14 @@
 
 namespace app\controllers;
 
+use app\components\BookPublishEvent;
+use app\components\MyEvent;
+use app\models\Author;
 use app\models\Book;
+use app\models\BookAuthor;
 use app\models\BookSearch;
+use app\models\Notificator;
+use yii\base\Event;
 use yii\db\Exception;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -16,6 +22,7 @@ use yii\web\Response;
  */
 class BookController extends Controller
 {
+    const EVENT_NEW_BOOK_ADDED = 1;
     public function behaviors(): array
     {
         return [
@@ -70,13 +77,27 @@ class BookController extends Controller
     public function actionCreate(): Response|string
     {
         $model = new Book();
+        $author = new Author();
 
         if ($this->request->isPost) {
             if (
-                $model->load($this->request->post())
+                $model->load($this->request->post(), 'Book')
                 && $model->save()
             ) {
+                $authorIds = $this->request->post('Author')['id'];
+                foreach ($authorIds as $authorId) {
+                    $link = new BookAuthor();
+                    $link->id_book = $model->id;
+                    $link->id_author = $authorId;
+                    $link->save();
+                }
+
                 $model->save();
+
+                $event = new BookPublishEvent();
+                $event->book = $model;
+                $this->trigger(self::EVENT_NEW_BOOK_ADDED, $event);
+
                 return $this->redirect(['index',]);
             }
         } else {
@@ -85,6 +106,7 @@ class BookController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'author' => $author,
         ]);
     }
 
@@ -98,13 +120,17 @@ class BookController extends Controller
     public function actionUpdate(int $id): Response|string
     {
         $model = $this->findModel($id);
+        $author = new Author();
+        $authors = Author::find()->all();
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index',]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'author' => $author,
+            'authors' => $authors,
         ]);
     }
 

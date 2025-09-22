@@ -1,13 +1,25 @@
 <?php
 
+use app\models\SignupSearch;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
 /** @var app\models\BookSearch $model */
 /** @var yii\widgets\ActiveForm $form */
+/** @var array $years */
+/** @var SignupSearch $searchModel */
+
 ?>
 
+<?php
+    if (
+        isset(Yii::$app->request->queryParams['Book']['issue_year'])
+    )
+    {
+        $model->issue_year = Yii::$app->request->queryParams['Book']['issue_year'];
+    }
+?>
 <div class="book-search">
 
     <?php
@@ -15,22 +27,16 @@ use yii\widgets\ActiveForm;
         'action' => ['index'],
         'method' => 'get',
     ]);
-
-    $years = [];
-    $books = $model::find()->all();
-    foreach ($books as $key => $book) {
-        $years[$book->issue_year] = $book->issue_year;
-    }
     ?>
 
-    <?=
-    $form->field($model, 'issue_year')
-        ->dropDownList($years, ['prompt' => 'Select year'])
-    ?>
+        <?=
+        $form->field($model, 'issue_year')
+            ->dropDownList($years/*, ['prompt' => 'Select year']*/)
+        ?>
 
-    <div class="form-group">
-        <?= Html::submitButton('Select', ['class' => 'btn btn-primary']) ?>
-    </div>
+        <div class="form-group">
+            <?= Html::submitButton('Select', ['class' => 'btn btn-primary']) ?>
+        </div>
 
     <?php ActiveForm::end(); ?>
 

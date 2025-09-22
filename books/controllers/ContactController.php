@@ -2,44 +2,43 @@
 
 namespace app\controllers;
 
-use app\models\Author;
-use app\models\AuthorSearch;
-use app\models\BookQuery;
-use yii\db\Query;
-use yii\filters\AccessControl;
+use app\models\Contact;
+use app\models\SearchContact;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\web\Response;
 
 /**
- * AuthorController implements the CRUD actions for Author model.
+ * ContactController implements the CRUD actions for Contact model.
  */
-class AuthorController extends Controller
+class ContactController extends Controller
 {
+    /**
+     * @inheritDoc
+     */
     public function behaviors()
     {
-        return [
-            'access' => [
-                'class' => AccessControl::class,
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
+        return array_merge(
+            parent::behaviors(),
+            [
+                'verbs' => [
+                    'class' => VerbFilter::className(),
+                    'actions' => [
+                        'delete' => ['POST'],
                     ],
                 ],
-            ],
-        ];
+            ]
+        );
     }
 
     /**
-     * Lists all Author models.
+     * Lists all Contact models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new AuthorSearch();
+        $searchModel = new SearchContact();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -49,7 +48,7 @@ class AuthorController extends Controller
     }
 
     /**
-     * Displays a single Author model.
+     * Displays a single Contact model.
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -62,17 +61,23 @@ class AuthorController extends Controller
     }
 
     /**
-     * Creates a new Author model.
+     * Creates a new Contact model.
      * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|Response
+     * @return string|\yii\web\Response
      */
-    public function actionCreate(): Response|string
+    public function actionCreate()
     {
-        $model = new Author();
-
+        $model = new Contact();
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['index',]);
+
+                return $this->redirect(
+                    'index.php?r=signup%2Findex&Book%5Bissue_year%5D=1991'
+//                    [
+//                    'signup/signup',
+//                    'id' => $model->id,
+//                ]
+                );
             }
         } else {
             $model->loadDefaultValues();
@@ -80,14 +85,15 @@ class AuthorController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'token' => $this->request->getQueryParam('token'),
         ]);
     }
 
     /**
-     * Updates an existing Author model.
+     * Updates an existing Contact model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
-     * @return string|Response
+     * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionUpdate($id)
@@ -104,10 +110,10 @@ class AuthorController extends Controller
     }
 
     /**
-     * Deletes an existing Author model.
+     * Deletes an existing Contact model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
-     * @return Response
+     * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionDelete($id)
@@ -118,24 +124,15 @@ class AuthorController extends Controller
     }
 
     /**
-     * {@inheritdoc}
-     * @return BookQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new BookQuery(get_called_class());
-    }
-
-    /**
-     * Finds the Author model based on its primary key value.
+     * Finds the Contact model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Author the loaded model
+     * @return Contact the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Author::findOne(['id' => $id])) !== null) {
+        if (($model = Contact::findOne(['id' => $id])) !== null) {
             return $model;
         }
 
